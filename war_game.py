@@ -71,9 +71,11 @@ def setEnemies(x,y):
         Groups.append([y])
         ListOfEnemies.append([len(Groups)-1, len(Groups)-2])
         return
+
+    e1 = searchEnemyOf(g1)
+    e2 = searchEnemyOf(g2)
     # if x is not part of a group, then add it to a groups of y's enemy
     if g1 == -1:
-        e2 = searchEnemyOf(g2)
         if e2 == -1:
             Groups.append([x])
             ListOfEnemies.append([g2, len(Groups)-1])
@@ -87,7 +89,6 @@ def setEnemies(x,y):
 
     # if y is not part of a group, then add it to a groups of x's enemy
     if g2 == -1:
-        e1 = searchEnemyOf(g1)
         if e1 == -1:
             Groups.append([y])
             ListOfEnemies.append([g1, len(Groups)-1])
@@ -99,8 +100,6 @@ def setEnemies(x,y):
                 Groups[enemyA].append(y)
         return
 
-    e1 = searchEnemyOf(g1)
-    e2 = searchEnemyOf(g2)
     if e1 == -1 and e2 == -1:
         ListOfEnemies.append([g1, g2])
         return
@@ -168,12 +167,22 @@ def mergeGroups(g1, e1, g2, e2, friends):
     global ListOfEnemies
     global Groups
 
+    if e1 == -1:
+        g1, g2 = g2, g1
+        e1, e2 = e2, e1   
+ 
     enemyA, enemyOfA = ListOfEnemies[e1]
     enemyX, enemyOfX = ListOfEnemies[e2]
-        
+    
+    
     if enemyA == g1:
         if friends == False:
             enemyA, enemyOfA = enemyOfA, enemyA
+
+        if e2 == -1:
+            Groups[enemyA].extend( Groups[g2] )
+            Groups[g2] = []
+            return
 
         if enemyX == g2:
             Groups[enemyA].extend( Groups[enemyX] )
@@ -184,6 +193,11 @@ def mergeGroups(g1, e1, g2, e2, friends):
     else:
         if friends == False:
             enemyA, enemyOfA = enemyOfA, enemyA
+
+        if e2 == -1:
+            Groups[enemyOfA].extend( Groups[g2] )
+            Groups[g2] = []
+            return
 
         if enemyX == g2:
             Groups[enemyOfA].extend( Groups[enemyX] )
