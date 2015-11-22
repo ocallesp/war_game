@@ -47,8 +47,14 @@ def setFriends(x,y):
 
     e1 = searchEnemyOf(g1)
     e2 = searchEnemyOf(g2)
+
+    if e1 == -1 and (e1 == e2):
+        Groups[g1].extend( Groups[g2] )
+        Groups[g2] = []
+        return
+
     # cannot be friends because they are enemies in some other way
-    if e1 == e2:
+    if e1 != -1 and (e1 == e2):
         return -1
 
     mergeGroups(g1, e1, g2, e2, True)
